@@ -1,0 +1,527 @@
+openapi: 3.0.0
+info:
+  title: Ecommerse API
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:3000
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+tags:
+  - name: Auth
+  - name: User
+  - name: Product
+  - name: Review
+  - name: Order
+paths:
+  /api/v1/auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: john@example.com
+                password: secret123
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/auth/signup:
+    post:
+      tags:
+        - Auth
+      summary: Register User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Smith
+                email: smith@example.com
+                password: "12345678"
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/auth/logout:
+    get:
+      tags:
+        - Auth
+      summary: Logout User
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/users:
+    get:
+      tags:
+        - User
+      summary: All Users
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/users/showMe:
+    get:
+      tags:
+        - User
+      summary: Show Current User
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/users/{userId}:
+    get:
+      tags:
+        - User
+      summary: User By ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/users/updateUser:
+    patch:
+      tags:
+        - User
+      summary: Update User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Johnny Snow
+                email: john@example.com
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/users/updateUserPassword:
+    patch:
+      tags:
+        - User
+      summary: Update User Password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                oldPassword: "12345678"
+                newPassword: secret123
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/products:
+    get:
+      tags:
+        - Product
+      summary: Get All Products
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - Product
+      summary: Create Product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Sofa
+                price: 34999
+                colors:
+                  - "#ff0000"
+                  - "#00ff00"
+                  - "#0000ff"
+                company: ikea
+                description: Authentic Sofa
+                category: home
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/products/{pId}:
+    get:
+      tags:
+        - Product
+      summary: Get Product by Id
+      parameters:
+        - name: pId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+    patch:
+      tags:
+        - Product
+      summary: Update Product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                featured: false
+                freeShipping: false
+                inventory: 20
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: pId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - Product
+      summary: Delete Product
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: pId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/products/{pId}/reviews:
+    get:
+      tags:
+        - Product
+      summary: Get Reviews for Product
+      parameters:
+        - name: pId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/products/uploadProductImage:
+    post:
+      tags:
+        - Product
+      summary: Upload Product Image
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/reviews:
+    get:
+      tags:
+        - Review
+      summary: Get All Reviews
+      parameters:
+        - name: product
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - Review
+      summary: Create Review
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                rating: 3
+                title: avg product
+                comment: avg product
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/reviews/{rvId}:
+    get:
+      tags:
+        - Review
+      summary: Get Review By Id
+      parameters:
+        - name: rvId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+    patch:
+      tags:
+        - Review
+      summary: Update Review
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                rating: 2
+                title: Very bad product
+                comment: very bad product
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: rvId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - Review
+      summary: Delete Review
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: rvId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/orders:
+    get:
+      tags:
+        - Order
+      summary: Get All Orders
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: orderItems.quantity
+          in: query
+          schema:
+            type: integer
+          example: "4"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - Order
+      summary: Create Order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                tax: 499
+                shippingFee: 799
+                items:
+                  - name: Sofa
+                    price: 3499
+                    image: /uploads/example.jpeg
+                    quantity: 5
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/orders/{orderId}:
+    get:
+      tags:
+        - Order
+      summary: Get Order By Id
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: orderId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+    patch:
+      tags:
+        - Order
+      summary: Update Order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                transationId: "123456789"
+                status: paid
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: orderId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/orders/showAllMyOrders:
+    get:
+      tags:
+        - Order
+      summary: Show My All Orders
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
